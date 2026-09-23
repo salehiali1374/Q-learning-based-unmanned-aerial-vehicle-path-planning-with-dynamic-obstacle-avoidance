@@ -1,6 +1,13 @@
 # Q-Learning-Based UAV Path Planning with Dynamic Obstacle Avoidance
 
-A Python implementation and comparative study of path-planning algorithms for Unmanned Aerial Vehicles (UAVs), reproducing and extending the work from **Sonny et al. (2023)**. The key contribution is a **Proposed Q-learning with Shortest Distance Priority (SDP)** that significantly reduces the number of training episodes required compared to the original Q-learning approach.
+Reproduction and benchmark of UAV path-planning methods, including Q-learning with Shortest Distance Priority (SDP), based on **Sonny et al. (2023)**.
+
+## Scope of this repository
+
+- **Prior method:** Q-learning with Shortest Distance Priority (SDP) is the method proposed by Sonny et al. (2023). The experimental setup and hyperparameters (Table 1) follow the paper. SDP is not an original contribution of this repository.
+- **This implementation:** a Python implementation of all planners (A\*, Dijkstra, SARSA, original Q-learning, Q-learning + SDP), dynamic-obstacle simulation and plotting, organized as a small package under `src/`.
+- **Experiments:** the paper's static and dynamic-obstacle scenarios (2 and 4 dynamic obstacles) are re-run, and the figures are regenerated with the same numbering as the paper (Fig. 4–10, Table 2).
+- **Modifications:** this repository does not claim methodological changes to the paper's approach.
 
 ## Results
 
@@ -13,19 +20,19 @@ All algorithms are benchmarked on a **25×25 grid** with 4 static obstacles. The
 | SARSA | Static | ~38 steps |
 | Original Q-learning | Static | ~38 steps |
 | Original Q-learning | 4 dynamic | ~38 steps |
-| **Proposed Q-learning (SDP)** | **Static** | **~38 steps (500 eps)** |
-| **Proposed Q-learning (SDP)** | **2 dynamic** | **~38 steps (1500 eps)** |
-| **Proposed Q-learning (SDP)** | **4 dynamic** | **~38 steps (1500 eps)** |
+| Q-learning + SDP (Sonny et al.) | Static | ~38 steps (500 eps) |
+| Q-learning + SDP (Sonny et al.) | 2 dynamic | ~38 steps (1500 eps) |
+| Q-learning + SDP (Sonny et al.) | 4 dynamic | ~38 steps (1500 eps) |
 
-The proposed method converges in **500 episodes** (static) vs. **1000 episodes** for the original — a 2× improvement — while maintaining path quality.
+Following the paper's setup (Table 1), Q-learning + SDP is trained with **500 episodes** in the static case vs. **1000 episodes** for the original Q-learning, and in this reproduction it reaches the same ~38-step path length with that smaller budget.
 
 ### Sample Output Figures
 
-| Fig. 4 — Static obstacle paths | Fig. 5 — Proposed approach |
+| Fig. 4 — Static obstacle paths | Fig. 5 — Q-learning + SDP paths |
 |---|---|
 | ![Fig4](Fig4_static_obstacle_paths.png) | ![Fig5](Fig5_proposed_paths.png) |
 
-| Fig. 8 — Proposed Q-learning (static) | Fig. 10 — Proposed Q-learning (4 dynamic) |
+| Fig. 8 — Q-learning + SDP (static) | Fig. 10 — Q-learning + SDP (4 dynamic) |
 |---|---|
 | ![Fig8](Fig8_proposed_qlearn_static.png) | ![Fig10](Fig10_proposed_qlearn_4dyn.png) |
 
@@ -39,7 +46,7 @@ The proposed method converges in **500 episodes** (static) vs. **1000 episodes**
 | `src/dijkstra_planner.py` | Dijkstra's shortest path |
 | `src/sarsa_planner.py` | SARSA (on-policy TD control) |
 | `src/qlearning_original.py` | Q-learning with experience replay |
-| `src/qlearning_sdp.py` | **Proposed**: Q-learning + SDP + experience replay |
+| `src/qlearning_sdp.py` | Q-learning + SDP + experience replay (method of Sonny et al.) |
 
 ### What is SDP?
 
@@ -84,7 +91,7 @@ python main.py
 ```
 
 Running `main.py` will:
-1. Execute all 6 planners (A\*, Dijkstra, SARSA, Original Q-learning ×2, Proposed Q-learning ×3)
+1. Execute all planners (A\*, Dijkstra, SARSA, original Q-learning ×2, Q-learning + SDP ×3)
 2. Print a performance comparison table (training time, shortest/longest path)
 3. Save 7 figures (`Fig4`–`Fig10`, `Performance_Summary_Table2.png`) to the project root
 
@@ -101,8 +108,8 @@ Running `main.py` will:
 | Episodes — Original Q-learning (static) | 1000 |
 | Episodes — Original Q-learning (dynamic) | 4000 |
 | Episodes — SARSA | 1500 |
-| Episodes — Proposed Q-learning (static) | **500** |
-| Episodes — Proposed Q-learning (dynamic) | **1500** |
+| Episodes — Q-learning + SDP (static) | 500 |
+| Episodes — Q-learning + SDP (dynamic) | 1500 |
 
 ## Environment Setup
 
